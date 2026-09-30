@@ -1,0 +1,798 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <meta name="description" content="An interactive product concept: refresh linked PowerPoint charts from Databricks and recover from a changed query column. Fictional data; no live connection.">
+  <title>Keep every chart current · Databricks for PowerPoint concept</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%231b3d52'/%3E%3Cpath d='M8 23V15h4v8zm6 0V9h4v14zm6 0V12h4v11z' fill='%2374bbb4'/%3E%3C/svg%3E">
+  <style>
+    :root{font-family:"Segoe UI",system-ui,-apple-system,BlinkMacSystemFont,Arial,sans-serif;color:#233b49;background:#edf1f3;font-synthesis:none;font-size:16px;--navy:#1b3d52;--teal:#70bbb3;--red:#e94b35;--muted:#6b7c89;--border:#dce5e9;--green:#187b5b;--amber:#906016;--blue:#347cc8;--canvas:#e7ecef}
+    *{box-sizing:border-box}body{margin:0}button,input,select{font:inherit}button{cursor:pointer}button:disabled{cursor:wait;opacity:.55}button:focus-visible,a:focus-visible,select:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:3px solid #167bc4;outline-offset:3px}button{color:inherit}svg{display:block}.icon{width:20px;height:20px;flex-shrink:0;display:inline-block;vertical-align:middle;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}.sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}p,h1,h2,h3{margin:0}button[aria-disabled=true]{cursor:default;color:#66737e}button[aria-disabled=true]:hover{background:rgba(255,255,255,.5)}
+    .page{max-width:1840px;margin:auto;padding:26px 30px 22px}.page-header{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:18px}.page-header h1{font-size:23px;letter-spacing:-.5px;font-weight:720;color:#223945}.eyebrow{font-size:12px;font-weight:750;letter-spacing:1.6px;text-transform:uppercase;color:#7a8993}.walkthrough{border:1px solid #d6e0e5;border-radius:12px;background:#fff;display:flex;align-items:center;gap:20px;padding:13px 18px;margin-bottom:18px;box-shadow:0 2px 5px #233b4903}.walkthrough strong{font-size:14px;white-space:nowrap}.steps{display:flex;gap:24px;align-items:center;flex:1}.step{display:flex;align-items:center;gap:8px;font-size:14px;color:#526775}.step-number{width:25px;height:25px;background:#eaf2f5;border:1px solid #dae6eb;border-radius:50%;display:grid;place-items:center;font-size:13px;font-weight:750;color:var(--navy)}.step.current .step-number{color:#fff;background:var(--navy);border-color:var(--navy)}.step.completed .step-number{color:var(--green);background:#e5f3ec;border-color:#cfe7dc}.reset{border:1px solid #d5e0e5;background:#fff;border-radius:6px;padding:7px 11px;font-size:13px;display:flex;align-items:center;gap:6px;white-space:nowrap}.reset .icon{width:16px;height:16px}.simulation{font-size:12px;color:#73848f;margin-top:4px}
+    .product{background:#fff;border:1px solid #d8e1e5;border-radius:12px;overflow:hidden;box-shadow:0 10px 26px #213d4e12,0 2px 5px #213d4e10}.titlebar{min-height:45px;background:#fdf0e9;display:flex;align-items:center;padding:8px 17px;gap:18px;font-size:13px}.office-name{display:flex;align-items:center;gap:8px;font-weight:700;font-size:15px;color:#68483b;white-space:nowrap}.office-icon{color:#a55c44}.titlebar .filename{font-weight:650;color:#494f53}.titlebar .saved{display:flex;gap:6px;align-items:center;font-size:12px;color:#8c837d}.titlebar .saved .icon{width:16px;height:16px}.window-actions{display:flex;gap:4px;margin-left:auto}.inert{position:relative;border:0;background:none;padding:6px 8px;font-size:13px;border-radius:3px}.window-actions .inert{font-size:18px;width:32px;padding:1px 5px}.ribbon-tabs{display:flex;align-items:center;gap:4px;padding:0 14px;border-bottom:1px solid #e1e6e9;min-height:38px}.ribbon-tabs .inert{padding:9px 10px;white-space:nowrap}.ribbon-tabs .active{font-weight:650;color:#c74a30;border-radius:0;box-shadow:inset 0 -2px #e34b34}.ribbon-tools{height:73px;background:#f8fafb;border-bottom:1px solid #dce4e8;display:flex;gap:12px;align-items:center;padding:9px 18px}.ribbon-tools .inert{display:flex;align-items:center;flex-direction:column;gap:4px;font-size:12px;min-width:60px;text-align:center;padding:4px}.ribbon-tools .icon{width:23px;height:23px;color:#778e9b}.ribbon-divider{height:45px;width:1px;background:#dfe7eb}.style-samples{display:flex;gap:7px}.mini-chart{width:60px;height:39px;border:1px solid #d6e0e6;background:#fff;display:flex;align-items:flex-end;gap:4px;padding:7px 10px}.mini-chart span{width:7px;background:var(--teal)}.mini-chart span:nth-child(even){background:var(--navy)}.ribbon-tools .mini-chart{flex-direction:row;align-items:flex-end;padding:7px 10px;gap:4px}.mini-chart.active{border:1.5px solid var(--red)}.tool-label{font-size:12px;color:#7a8993;text-align:center;margin-top:3px}
+    .workspace{display:grid;grid-template-columns:136px minmax(0,1fr) 342px;min-height:690px}.slides{background:#f6f8f9;border-right:1px solid #dce4e8;padding:16px 9px 10px;overflow:hidden}.slides-label{font-size:12px;color:#84929b;margin:0 0 14px 14px}.thumbnail{display:flex;align-items:flex-start;gap:6px;width:100%;padding:7px 3px;margin-bottom:13px;border:0;background:transparent;text-align:left;border-radius:3px}.thumb-number{font-size:11px;color:#788994;margin-top:4px;min-width:9px}.thumb-paper{height:60px;width:105px;flex:1;background:#fff;border:1px solid #d8e2e8;padding:5px 7px;overflow:hidden;box-shadow:0 1px 1px #15354e06}.thumbnail.selected .thumb-paper{outline:2px solid var(--red);outline-offset:2px}.thumbnail.selected .thumb-number{color:var(--red);font-weight:700}.thumbnail.selected{background:#fdf0eb}.thumb-brand{font-size:3.5px;letter-spacing:.7px;font-weight:700;color:var(--navy);border-bottom:1px solid #e5ecef;padding-bottom:4px}.thumb-title{font-size:4.5px;font-weight:650;color:var(--navy);line-height:1.2;margin:4px 0}.thumb-bars{display:flex;align-items:flex-end;height:28px;gap:5px;border-bottom:1px solid #e1e8ec;width:85%}.thumb-bars i{width:12px;background:var(--teal)}.thumb-bars i:nth-child(odd){background:var(--navy)}.thumbnail:first-of-type .thumb-paper{background:var(--navy);border-color:var(--navy);color:#fff}.thumbnail:first-of-type .thumb-brand,.thumbnail:first-of-type .thumb-title{color:#fff}.thumbnail:first-of-type .thumb-title{font-size:8px;margin-top:7px}.thumbnail:first-of-type .thumb-bars{display:none}
+    .editor{min-width:0;background:var(--canvas);display:flex;flex-direction:column}.editor-heading{padding:16px 22px 14px;display:flex;justify-content:space-between;font-size:12px;color:#7d8c97;gap:15px}.slide-area{padding:0 24px 26px;flex:1;display:flex;align-items:flex-start;justify-content:center}.slide{width:100%;background:#fff;border-left:6px solid var(--navy);box-shadow:4px 5px 0 #cfd8df;padding:24px 30px 14px;position:relative;min-height:535px}.slide-meta{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #dbe5ea;padding-bottom:16px;gap:16px;margin-bottom:20px}.brand{font-size:14px;letter-spacing:3px;font-weight:750;color:var(--navy)}.slide-tag{font-size:9px;font-weight:700;letter-spacing:.8px;color:#738590;text-align:right}.slide h2{font-size:clamp(23px,2.05vw,37px);font-weight:730;line-height:1.15;letter-spacing:-1px;color:var(--navy);margin-bottom:8px}.slide-subtitle{font-size:clamp(13px,1.15vw,19px);color:#6f818e;line-height:1.45;margin-bottom:27px}.slide-body{display:grid;grid-template-columns:minmax(0,1fr) 170px;gap:26px}.chart-frame{border:1px solid #4795df;position:relative;padding:9px 12px 7px;min-width:0}.chart-frame::before,.chart-frame::after{content:"";position:absolute;width:5px;height:5px;border:1px solid #4795df;background:#fff;top:-3px;left:-3px}.chart-frame::after{top:auto;left:auto;right:-3px;bottom:-3px}.chart-heading{display:flex;justify-content:space-between;gap:15px;align-items:flex-start}.chart-heading h3{font-size:18px;font-weight:670;letter-spacing:-.3px;color:var(--navy);line-height:1.3}.chart-unit{font-size:11px;color:#7a8d99;margin-top:4px}.legend{display:flex;gap:12px;font-size:10px;color:#70818d;flex-shrink:0;padding-top:4px}.legend-item{display:flex;align-items:center;gap:5px}.legend-item i{width:9px;height:9px;background:var(--navy);border-radius:1px}.legend-item:last-child i{background:var(--teal)}.chart-svg{width:100%;height:auto;overflow:visible;margin-top:14px;aspect-ratio:auto}.chart-svg text{font-family:inherit}.chart-meta{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;font-size:10px;color:#728692;padding:9px 5px 0;flex-wrap:wrap}.chart-meta span{display:flex;gap:5px;align-items:center;overflow-wrap:anywhere}.chart-meta .icon{width:13px;height:13px}.chart-result{font-size:11px;display:flex;gap:5px;align-items:center;margin:7px 5px 0;color:#788b98;min-height:20px}.chart-result.success{color:var(--green)}.chart-result.error,.chart-result.repaired{color:var(--amber)}.chart-result .icon{width:14px;height:14px}.takeaways{padding:11px 0 0 20px;border-left:1px solid #e3eaee}.takeaway-label{font-size:10px;font-weight:700;letter-spacing:1.7px;color:#768792;margin-bottom:18px}.takeaway{padding-bottom:17px;margin-bottom:17px;border-bottom:1px solid #e0e9ee}.takeaway:last-of-type{border:0;margin-bottom:7px}.takeaway-value{font-size:42px;line-height:1.05;font-weight:730;letter-spacing:-1.5px;color:var(--navy)}.takeaway-description{font-size:13px;line-height:1.4;color:#788a96;margin-top:7px}.action{background:#f0f6f6;border-left:2px solid var(--teal);padding:11px 10px;font-size:12px;line-height:1.5;color:var(--navy);font-weight:550}.slide-footer{border-top:1px solid #e0e8ed;display:flex;justify-content:space-between;margin-top:20px;padding-top:10px;font-size:9px;letter-spacing:1px;color:#93a2ac}.notes{font-size:12px;color:#94a2ac;border-top:1px solid #d5dfe6;padding:13px 19px;min-height:44px;background:#f4f7f9}.notes .inert{padding:0;color:#8c9da8;font-size:12px}
+    .pane{display:flex;flex-direction:column;background:#fff;border-left:1px solid #dbe4e9;min-width:0}.pane-header{display:flex;align-items:center;gap:11px;padding:20px 19px 17px;border-bottom:1px solid #e8eef1}.pane-icon{color:var(--red)}.pane-icon .icon{width:30px;height:30px}.pane-name{font-size:23px;font-weight:700;letter-spacing:-.6px;line-height:1.05}.pane-subtitle{font-size:9px;letter-spacing:2px;color:#81929e;margin-top:4px;font-weight:700}.pane-body{padding:14px 17px 15px;flex:1;min-width:0}.workspace-picker{background:#f7f9fa;border:1px solid #e3eaee;border-radius:5px;padding:10px 11px;text-align:left;width:100%;display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:15px}.workspace-picker:hover{border-color:#b5cdd8}.workspace-name{font-size:13px;font-weight:650;display:flex;gap:7px;align-items:center}.status-dot{width:6px;height:6px;background:#218668;border-radius:50%}.signed-in{display:block;font-size:11px;color:#81919c;margin-top:4px;padding-left:13px}.workspace-picker .icon{width:15px;height:15px;color:#8fa0a9}.refresh-button{width:100%;padding:13px 9px;display:flex;align-items:center;justify-content:center;gap:9px;background:var(--red);color:#fff;border:1px solid var(--red);border-radius:5px;font-size:16px;font-weight:670;transition:background .15s}.refresh-button:hover{background:#d83e29}.refresh-button .icon{width:20px;height:20px}.refresh-button:disabled{opacity:1;background:#df7667;border-color:#df7667}.refresh-button.running .icon{animation:spin 1.4s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}.linked-count{text-align:center;font-size:11px;color:#81909b;margin-top:7px;margin-bottom:13px}.deck-status{display:flex;gap:9px;padding:11px 10px;border:1px solid #dbe7ed;background:#f2f7fa;border-radius:5px;min-height:68px;color:#3f6177;margin-bottom:13px}.deck-status .icon{width:17px;height:17px;margin-top:1px}.deck-status.warning{background:#fff8eb;border-color:#eedbb2;color:#8b611c}.deck-status.success{background:#eef8f3;border-color:#d2ecdf;color:#237c5e}.deck-status strong{font-size:13px;font-weight:650;line-height:1.45;display:block}.deck-status p{font-size:11px;line-height:1.5;margin-top:4px;color:inherit;opacity:.9}.deck-warning-button{padding:0;display:block;background:none;border:0;color:#885b15;text-align:left;font-size:11px;font-weight:650;text-decoration:underline;text-underline-offset:3px;margin-top:7px}.progress-track{height:3px;background:#d7e5ef;margin-top:9px;border-radius:2px;overflow:hidden}.progress-bar{height:100%;background:#497994;transition:width .15s}.pane-tabs{display:flex;border-bottom:1px solid #e1e8ed;margin-bottom:14px}.pane-tab{font-size:13px;border:0;background:transparent;padding:10px 0 9px;text-align:left;flex:1;color:#7a8c97;position:relative}.pane-tab[aria-selected=true]{color:#263e4d;font-weight:650}.pane-tab[aria-selected=true]::after{content:"";position:absolute;bottom:-1px;left:0;width:calc(100% - 16px);height:2px;background:var(--red)}.selection-title{font-size:17px;font-weight:650;letter-spacing:-.3px;line-height:1.3;margin-bottom:4px}.selection-meta{font-size:11px;color:#83929d;margin-bottom:16px}.section-label{font-size:11px;font-weight:650;color:#344c5b;margin-bottom:7px}.query-card{width:100%;border:1px solid #dce6ec;background:#f8fafc;border-radius:5px;display:flex;gap:9px;padding:10px 9px;text-align:left;align-items:center;margin-bottom:15px}.query-card:hover{border-color:#99bdcf;background:#f2f7fa}.query-card>.icon{width:19px;height:19px;color:#8ba1ae}.query-name{font-size:11px;font-weight:650;line-height:1.4;overflow-wrap:anywhere}.query-folder{font-size:10px;color:#83929d;line-height:1.4;margin-top:3px}.query-card .open{margin-left:auto;width:14px;flex-shrink:0}.mapping-label{font-size:10px;color:#7b8d99;letter-spacing:1.1px;font-weight:700;margin-bottom:9px}.mapping-row{display:grid;grid-template-columns:76px minmax(0,1fr);align-items:center;gap:9px;margin-bottom:8px}.mapping-row label{font-size:12px;color:#788c9a}.mapping-select{position:relative}.mapping-select select{font-size:12px;color:#365267;border:1px solid #dbe5eb;border-radius:4px;background:#fff;width:100%;padding:9px 7px;height:36px;max-width:100%}.mapping-row.invalid select{border-color:#ce9a49;background:#fffaf1;color:#8c6022}.missing-note{font-size:11px;color:#906117;line-height:1.45;display:flex;align-items:flex-start;gap:5px;margin:3px 0 8px}.missing-note .icon{width:14px;height:14px;flex-shrink:0;margin-top:1px}.suggestion{width:100%;background:#fff5df;border:1px solid #dbb56e;border-radius:4px;color:#825814;font-size:12px;padding:8px;font-weight:650;text-align:left;margin-bottom:11px}.suggestion:hover{background:#ffecc4}.selected-status{font-size:11px;line-height:1.5;border-radius:4px;padding:8px 9px;background:#f6f9fa;border:1px solid #e3ebef;margin:9px 0 10px;display:flex;gap:6px;align-items:flex-start}.selected-status .icon{width:15px;height:15px;margin-top:1px}.selected-status.success{color:var(--green);border-color:#d7eadf;background:#f2faf5}.selected-status.error,.selected-status.repaired{color:#8a601c;background:#fff8ec;border-color:#eddbb7}.view-data{width:100%;background:#fff;border:1px solid #d9e4ea;border-radius:4px;padding:7px 9px;display:flex;align-items:center;justify-content:center;gap:7px;font-size:12px;color:#4c6b80}.view-data:hover{background:#f5f8fa}.view-data .icon{width:15px;height:15px}.formatting{display:flex;gap:8px;background:#f7f9fa;border:1px solid #e4ebef;border-radius:5px;padding:10px;margin-top:12px}.formatting .icon{width:16px;height:16px;color:#208064}.formatting strong{font-size:12px;font-weight:650}.formatting p{font-size:10px;color:#8b9ba5;line-height:1.4;margin-top:4px}.permission-note{margin-top:13px;font-size:10px;line-height:1.6;color:#91a1ac;display:flex;gap:7px}.permission-note .icon{width:14px;height:14px;margin-top:2px}.pane-bottom{display:flex;justify-content:space-between;padding:0 17px 11px;gap:10px}.pane-bottom .inert{font-size:11px;color:#688a9e;padding:5px 0}.product-statusbar{border-top:1px solid #dbe5eb;padding:8px 15px;display:flex;justify-content:space-between;gap:14px;font-size:10px;color:#879aa6;background:#fff}.product-statusbar span{display:flex;gap:7px;align-items:center}.product-statusbar .icon{width:13px;height:13px}.statusbar-right{display:flex;gap:12px}.deck-list{display:flex;flex-direction:column;gap:7px;max-height:440px;overflow:auto;padding:2px 4px 4px 0}.deck-chart{border:1px solid #e2e9ed;background:#fff;border-radius:5px;padding:10px;width:100%;text-align:left;display:flex;gap:8px;align-items:flex-start}.deck-chart:hover{background:#f5f9fb;border-color:#b8ccd9}.deck-chart.chosen{background:#f2f7fa;border-color:#a5c4d6;box-shadow:inset 2px 0 var(--navy)}.deck-chart .icon{width:14px;height:14px;margin-top:2px;color:#8098a6}.deck-chart.error .icon,.deck-chart.repaired .icon{color:#a77220}.deck-chart.success .icon{color:var(--green)}.deck-chart-title{font-size:12px;font-weight:600}.deck-chart-meta{font-size:10px;color:#889ba7;margin-top:3px}.deck-chart-status{font-size:10px;color:#728997;margin-top:5px;line-height:1.4}.deck-chart.error .deck-chart-status,.deck-chart.repaired .deck-chart-status{color:#946922}.deck-chart.success .deck-chart-status{color:var(--green)}.deck-hint{font-size:11px;color:#8295a1;line-height:1.5;margin-bottom:11px}
+    .page-footer{display:flex;justify-content:space-between;gap:28px;margin-top:17px;align-items:flex-start;color:#728793;font-size:12px;line-height:1.55}.attribution{font-weight:550;color:#506b7c}.page-footer .footnote{text-align:right;max-width:510px;font-size:11px}.tooltip{position:fixed;z-index:100;background:#243c4d;color:#fff;border-radius:5px;font-size:12px;padding:8px 11px;max-width:245px;box-shadow:0 3px 12px #1b3d5224;pointer-events:none;line-height:1.4}.tooltip[hidden]{display:none}dialog{border:1px solid #d6e2e9;border-radius:12px;padding:0;max-width:min(670px,calc(100vw - 32px));width:670px;max-height:calc(100vh - 42px);box-shadow:0 24px 75px #15334735;color:#294451}dialog::backdrop{background:#18394f65;backdrop-filter:blur(2px)}.dialog-header{display:flex;align-items:flex-start;gap:15px;padding:23px 25px 17px;border-bottom:1px solid #e2ebf0}.dialog-header h2{font-size:21px;letter-spacing:-.5px;font-weight:680}.dialog-description{font-size:12px;color:#7a909e;margin-top:6px;line-height:1.5}.close-dialog{margin-left:auto;border:1px solid #dfe7ec;background:#fff;border-radius:5px;padding:5px;color:#66818f}.close-dialog .icon{width:17px;height:17px}.dialog-content{padding:21px 25px;max-height:calc(100vh - 220px);overflow:auto}.dialog-actions{display:flex;justify-content:flex-end;gap:10px;padding:14px 25px;border-top:1px solid #e3ebef;background:#f8fafb}.button-secondary,.button-primary{border:1px solid #d3e1e8;border-radius:5px;padding:9px 13px;font-size:13px;background:#fff;color:#45677c}.button-primary{background:var(--navy);border-color:var(--navy);color:#fff}.button-primary:hover{background:#254e67}.button-secondary:hover{background:#f1f7fa}.dialog-label{font-size:12px;font-weight:600;display:block;margin-bottom:7px}.dialog-select{width:100%;padding:9px 11px;font-size:13px;background:#fff;border:1px solid #d6e2e9;border-radius:5px;color:#38586a;margin-bottom:14px}.query-note{font-size:12px;line-height:1.6;color:#658091;margin-bottom:16px}.table-wrap{overflow:auto;border:1px solid #dbe6ec;border-radius:6px;max-width:100%}table{border-collapse:collapse;width:100%;font-size:12px;white-space:nowrap}caption{text-align:left;font-size:12px;padding:10px 12px;font-weight:600;color:#496a7f;background:#f4f8fa;border-bottom:1px solid #dee8ed}th,td{text-align:left;padding:9px 12px;border-bottom:1px solid #e5edf1}th{font-weight:650;background:#f8fafb;color:#607c8e;font-size:11px}td{color:#4a6679}tbody tr:last-child td{border:0}tbody tr:nth-child(even){background:#fafcfd}.dialog-mappings{margin-top:19px}.dialog-mappings .mapping-row{grid-template-columns:90px 1fr}.dialog-message{font-size:12px;line-height:1.5;color:#8a621d;background:#fff8ea;border:1px solid #eddaac;padding:10px;border-radius:5px;margin-top:12px}.signin-card{display:flex;gap:14px;padding:16px;border:1px solid #dce7ed;border-radius:7px;background:#f6f9fb;margin-bottom:15px}.avatar{width:42px;height:42px;border-radius:50%;background:#e5eef3;display:grid;place-items:center;font-size:15px;font-weight:650;color:var(--navy);flex-shrink:0}.signin-card strong{font-size:14px}.signin-card p{font-size:12px;line-height:1.5;color:#7991a0;margin-top:4px}.permission-list{margin:14px 0 0;padding:0;list-style:none;font-size:12px;color:#648092;line-height:1.7}.permission-list li{display:flex;gap:8px;margin-bottom:7px;align-items:flex-start}.permission-list .icon{width:15px;height:15px;color:var(--green);margin-top:3px}[hidden]{display:none!important}@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+    @media(min-width:1700px){.workspace{grid-template-columns:153px minmax(0,1fr) 380px}.slide{padding:32px 37px 19px;min-height:645px}.slide-body{grid-template-columns:minmax(0,1fr) 205px;gap:32px}.slide-subtitle{margin-bottom:35px}.chart-heading h3{font-size:23px}.chart-unit{font-size:13px}.legend{font-size:12px}.takeaway-value{font-size:55px}.takeaway-description{font-size:16px}.action{font-size:14px}.slide-tag{font-size:11px}.brand{font-size:17px}.chart-meta,.chart-result{font-size:12px}.pane-body{padding:17px 20px}.workspace-name{font-size:15px}.signed-in{font-size:12px}.refresh-button{font-size:18px}.deck-status strong{font-size:15px}.deck-status p,.deck-warning-button{font-size:12px}.selection-title{font-size:20px}.selection-meta{font-size:13px}.query-name{font-size:13px}.query-folder{font-size:11px}.mapping-row label,.mapping-select select{font-size:14px}.mapping-row{grid-template-columns:85px 1fr}.section-label,.pane-tab{font-size:14px}.selected-status,.missing-note,.view-data,.suggestion{font-size:13px}.formatting strong{font-size:14px}.formatting p{font-size:12px}.permission-note{font-size:12px}.thumbnail{margin-bottom:20px}.thumb-paper{height:73px}.thumb-brand{font-size:4px}.thumb-title{font-size:5px}.thumb-bars{height:36px}.ribbon-tools{height:82px}.titlebar{min-height:50px}.workspace{min-height:800px}}
+    @media(max-width:1250px){.page{padding:18px}.workspace{grid-template-columns:100px minmax(0,1fr) 310px}.slide-area{padding:0 15px 22px}.slide{padding:20px 20px 13px;min-height:480px}.slide-body{grid-template-columns:minmax(0,1fr) 125px;gap:16px}.takeaways{padding-left:13px}.takeaway-value{font-size:34px}.chart-heading{flex-wrap:wrap;gap:3px}.legend{font-size:9px}.chart-heading h3{font-size:16px}.slide h2{font-size:27px}.takeaway-description{font-size:12px}.action{font-size:11px}.thumb-paper{height:49px;padding:4px}.thumb-bars{height:21px;gap:4px}.thumb-title{font-size:4px}.thumbnail:first-of-type .thumb-title{font-size:6px}.thumb-bars i{width:8px}.slides{padding-left:6px;padding-right:5px}.slides-label{margin-left:10px}.ribbon-tabs{gap:0;overflow:hidden}.ribbon-tabs .inert{font-size:12px;padding:9px 8px}.ribbon-tools{gap:9px}.mini-chart{width:48px;gap:3px;padding:6px}.walkthrough{gap:16px}.steps{gap:15px}.step{font-size:13px}.editor-heading{padding:15px}.page-header h1{font-size:21px}.slide-tag{font-size:8px}.brand{font-size:12px}}
+    @media(max-width:1050px){.workspace{grid-template-columns:minmax(0,1fr) 308px}.slides{display:none}.ribbon-tabs .optional-tab{display:none}.ribbon-tools .optional-tool{display:none}.slide h2{font-size:25px}.slide-body{grid-template-columns:minmax(0,1fr) 115px;gap:12px}.slide{padding:20px 16px 13px}.takeaway-value{font-size:32px}.takeaways{padding-left:11px}.walkthrough{gap:10px}.steps{gap:10px}.step{font-size:12px}.step-number{width:22px;height:22px}.page-header .eyebrow{font-size:10px}.legend{gap:8px}}
+    @media(max-width:800px){.page{padding:14px 12px}.page-header{align-items:flex-start;margin-bottom:13px}.page-header h1{font-size:19px;max-width:260px}.page-header .eyebrow{font-size:9px;margin-top:4px;max-width:95px;text-align:right;line-height:1.5}.walkthrough{flex-wrap:wrap;padding:12px;gap:10px;border-radius:8px}.walkthrough strong{font-size:13px}.steps{order:3;width:100%;flex-basis:100%;justify-content:space-between;align-items:flex-start;gap:9px}.step{font-size:11px;align-items:flex-start;flex:1;line-height:1.4}.step-number{flex-shrink:0;width:21px;height:21px;font-size:11px}.reset{margin-left:auto;font-size:11px;padding:6px 8px}.simulation{font-size:10px}.product{border-radius:8px}.titlebar{gap:10px;padding:8px 10px;min-height:43px}.office-name{font-size:12px}.office-icon .icon{width:18px;height:18px}.titlebar .filename{font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.titlebar .saved{display:none}.window-actions{display:none}.ribbon-tabs{padding:0 8px;min-height:32px}.ribbon-tabs .inert{font-size:10px;padding:8px}.ribbon-tabs .mobile-hide{display:none}.ribbon-tools{height:57px;padding:6px 10px;gap:12px}.ribbon-tools .inert{font-size:9px;min-width:40px;gap:2px;padding:2px}.ribbon-tools .icon{width:18px;height:18px}.ribbon-tools .mobile-hide{display:none}.style-samples{gap:5px}.mini-chart{height:29px;width:39px;padding:5px;gap:3px}.mini-chart span{width:5px}.tool-label{font-size:9px}.workspace{display:flex;flex-direction:column;min-height:0}.editor{order:1}.pane{order:0;border-left:0;border-bottom:1px solid #dce5eb}.pane-header{padding:13px 15px}.pane-icon .icon{width:23px;height:23px}.pane-name{font-size:20px}.pane-subtitle{font-size:8px}.pane-body{padding:12px 15px}.workspace-picker{margin-bottom:12px}.workspace-name{font-size:14px}.signed-in{font-size:12px}.refresh-button{font-size:16px;padding:12px}.linked-count{font-size:12px}.deck-status strong{font-size:14px}.deck-status p,.deck-warning-button{font-size:12px}.pane-tabs{margin-bottom:12px}.pane-tab{font-size:14px}.selection-title{font-size:19px}.selection-meta{font-size:12px}.section-label{font-size:12px}.query-name{font-size:13px}.query-folder{font-size:12px}.query-card{padding:12px}.mapping-row{grid-template-columns:76px 1fr}.mapping-row label,.mapping-select select{font-size:14px}.mapping-select select{height:40px}.mapping-label{font-size:11px}.missing-note,.suggestion,.selected-status,.view-data{font-size:13px}.formatting{margin-top:10px}.formatting strong{font-size:13px}.formatting p,.permission-note{font-size:12px}.pane-bottom{padding:0 15px 8px}.pane-bottom .inert{font-size:12px}.deck-list{max-height:385px}.deck-chart-title{font-size:14px}.deck-chart-meta,.deck-chart-status{font-size:12px}.editor-heading{padding:13px 15px;font-size:11px}.slide-area{padding:0 14px 20px}.slide{min-height:0;padding:19px 16px 12px;border-left-width:4px}.slide-meta{padding-bottom:11px;margin-bottom:15px;gap:7px}.brand{font-size:11px;letter-spacing:2px}.slide-tag{font-size:7px}.slide h2{font-size:clamp(20px,4.6vw,30px);letter-spacing:-.7px}.slide-subtitle{font-size:12px;margin-bottom:18px}.slide-body{grid-template-columns:minmax(0,1fr)}.takeaways{display:grid;grid-template-columns:1fr 1fr;gap:13px;border:0;padding:5px 0 0}.takeaway-label{grid-column:1/-1;margin-bottom:0;font-size:10px}.takeaway{border:0;margin:0;padding:0}.takeaway-value{font-size:34px}.takeaway-description{font-size:12px}.action{grid-column:1/-1;font-size:12px;padding:10px}.chart-heading{flex-wrap:wrap}.chart-heading h3{font-size:17px}.legend{font-size:11px;width:100%;margin-top:3px;flex-wrap:wrap}.chart-unit{font-size:11px}.chart-meta,.chart-result{font-size:10px}.slide-footer{margin-top:15px}.notes{padding:10px 14px}.product-statusbar{font-size:9px;padding:8px 11px}.statusbar-right{display:none}.page-footer{flex-direction:column;gap:9px;font-size:11px}.page-footer .footnote{text-align:left;max-width:none;font-size:11px}dialog{max-width:calc(100vw - 20px)}.dialog-header{padding:18px 17px 13px}.dialog-content{padding:17px}.dialog-actions{padding:13px 17px}.dialog-header h2{font-size:19px}}
+    @media(max-width:380px){.page-header h1{font-size:17px}.page-header .eyebrow{max-width:74px;font-size:8px}.ribbon-tabs .inert{padding:8px 6px}.ribbon-tools{gap:8px}.chart-heading{flex-wrap:wrap}.slide{padding:17px 12px 12px}.slide-tag{font-size:6px}.steps{gap:5px}.step{gap:5px;font-size:10px}.takeaway-value{font-size:30px}.page{padding:12px 8px}}
+  </style>
+</head>
+<body>
+  <svg aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden"><defs>
+    <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 20h17M6 17V11h3v6m3 0V5h3v12m3 0V8h3v9"/></symbol>
+    <symbol id="i-present" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="13" rx="1"/><path d="M12 16v5m-4 0 4-3 4 3M7 12V9m5 3V6m5 6V8"/></symbol>
+    <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 10a8 8 0 1 0-.8 7M20 4v6h-6"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+    <symbol id="i-warning" viewBox="0 0 24 24"><path d="M11 4 2.7 18a1.5 1.5 0 0 0 1.3 2h16a1.5 1.5 0 0 0 1.3-2L13 4a1.15 1.15 0 0 0-2 0Z"/><path d="M12 9v5m0 3h.01"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+    <symbol id="i-link" viewBox="0 0 24 24"><path d="m9 15 6-6m-7 3-3 3a4 4 0 0 0 6 6l4-4m1-5 3-3a4 4 0 0 0-6-6l-4 4"/></symbol>
+    <symbol id="i-database" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></symbol>
+    <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+    <symbol id="i-open" viewBox="0 0 24 24"><path d="M14 3h7v7m-9 2 9-9M10 4H4v16h16v-6"/></symbol>
+    <symbol id="i-table" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="1"/><path d="M3 9h18M3 14h18M9 4v16m6-16v16"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M6 18 18 6"/></symbol>
+    <symbol id="i-cloud" viewBox="0 0 24 24"><path d="M7 18h11a4 4 0 0 0 0-8 6 6 0 0 0-11-2 5 5 0 0 0 0 10Z"/><path d="m9 12 2 2 4-4"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6m0-10h.01"/></symbol>
+    <symbol id="i-palette" viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 0 18h2a2 2 0 0 0 1-3.7c-2-1.3-1-3.3 1-3.3h2a3 3 0 0 0 3-3c0-4.5-4-8-9-8Z"/><path d="M7 9h.01M10 6h.01m5 0h.01m3 3h.01"/></symbol>
+  </defs></svg>
+  <main class="page">
+    <header class="page-header"><h1>Databricks for PowerPoint</h1><span class="eyebrow">Interactive product concept</span></header>
+    <section class="walkthrough" aria-label="Prototype walkthrough">
+      <div><strong>Try this</strong><p class="simulation">Fictional data · Simulated clock: Sep 29, 2026</p></div>
+      <div class="steps"><span class="step current" id="step-1"><span class="step-number">1</span>Refresh all charts</span><span class="step" id="step-2"><span class="step-number">2</span>Fix the warning</span><span class="step" id="step-3"><span class="step-number">3</span>Refresh again</span></div>
+      <button class="reset" id="reset-demo"><svg class="icon" aria-hidden="true"><use href="#i-refresh"/></svg>Reset demo</button>
+    </section>
+    <section class="product" aria-label="Desktop PowerPoint concept">
+      <div class="titlebar"><span class="office-name"><span class="office-icon"><svg class="icon" aria-hidden="true"><use href="#i-present"/></svg></span>PowerPoint</span><span class="filename">Q2 Executive Review.pptx</span><span class="saved"><svg class="icon" aria-hidden="true"><use href="#i-cloud"/></svg>Saved</span><div class="window-actions"><button class="inert" aria-disabled="true" aria-label="Minimize window">−</button><button class="inert" aria-disabled="true" aria-label="Maximize window">□</button><button class="inert" aria-disabled="true" aria-label="Close window">×</button></div></div>
+      <nav class="ribbon-tabs" aria-label="Decorative PowerPoint ribbon"><button class="inert" aria-disabled="true">File</button><button class="inert" aria-disabled="true">Home</button><button class="inert" aria-disabled="true">Insert</button><button class="inert optional-tab" aria-disabled="true">Draw</button><button class="inert mobile-hide" aria-disabled="true">Design</button><button class="inert optional-tab" aria-disabled="true">Transitions</button><button class="inert optional-tab" aria-disabled="true">Animations</button><button class="inert optional-tab" aria-disabled="true">Slide Show</button><button class="inert optional-tab" aria-disabled="true">Review</button><button class="inert mobile-hide" aria-disabled="true">View</button><button class="inert mobile-hide" aria-disabled="true">Databricks</button><button class="inert active" aria-disabled="true">Chart Design</button><button class="inert mobile-hide" aria-disabled="true">Format</button></nav>
+      <div class="ribbon-tools" aria-label="Decorative chart tools">
+        <button class="inert" aria-disabled="true"><svg class="icon" aria-hidden="true"><use href="#i-chart"/></svg><span>Add Chart<br>Element</span></button><button class="inert" aria-disabled="true"><svg class="icon" aria-hidden="true"><use href="#i-table"/></svg><span>Quick<br>Layout</span></button><button class="inert mobile-hide" aria-disabled="true"><svg class="icon" aria-hidden="true"><use href="#i-palette"/></svg><span>Change<br>Colors</span></button><div class="ribbon-divider mobile-hide"></div>
+        <div><div class="style-samples"><button class="inert mini-chart active" aria-disabled="true" aria-label="Chart style one"><span style="height:12px"></span><span style="height:19px"></span><span style="height:15px"></span><span style="height:24px"></span></button><button class="inert mini-chart" aria-disabled="true" aria-label="Chart style two"><span style="height:15px"></span><span style="height:20px"></span><span style="height:12px"></span><span style="height:23px"></span></button><button class="inert mini-chart mobile-hide" aria-disabled="true" aria-label="Chart style three"><span style="height:10px"></span><span style="height:16px"></span><span style="height:21px"></span><span style="height:25px"></span></button></div><div class="tool-label">Chart Styles</div></div>
+        <div class="ribbon-divider optional-tool"></div><button class="inert optional-tool" aria-disabled="true"><svg class="icon" aria-hidden="true"><use href="#i-table"/></svg><span>Select<br>Data</span></button><button class="inert optional-tool" aria-disabled="true"><svg class="icon" aria-hidden="true"><use href="#i-chart"/></svg><span>Change<br>Chart Type</span></button>
+      </div>
+      <div class="workspace">
+        <aside class="slides" aria-label="Decorative slide thumbnails"><p class="slides-label">Slides</p><div id="thumbnails"></div></aside>
+        <section class="editor" aria-label="Selected slide"><div class="editor-heading"><span id="slide-indicator">Slide 3</span><span>Northstar corporate theme</span></div><div class="slide-area"><article class="slide" id="selected-slide" aria-label="Slide 3"><div class="slide-meta"><span class="brand">NORTHSTAR</span><span class="slide-tag">Q2 2026 / EXECUTIVE BUSINESS REVIEW</span></div><h2 id="slide-headline">Enterprise drove 75% of revenue growth</h2><p class="slide-subtitle" id="slide-subtitle">Revenue increased from $60m to $76m over the last four quarters.</p><div class="slide-body"><div><div class="chart-frame"><div class="chart-heading"><div><h3 id="chart-title">Revenue by segment</h3><p class="chart-unit" id="chart-unit">$ million</p></div><div class="legend"><span class="legend-item"><i></i><span id="legend-one">Enterprise</span></span><span class="legend-item"><i></i><span id="legend-two">SMB</span></span></div></div><svg id="chart-svg" class="chart-svg" viewBox="0 0 560 280" role="img" aria-labelledby="chart-svg-title chart-svg-description"><title id="chart-svg-title">Revenue by segment</title><desc id="chart-svg-description">Revenue increased from 60 to 76 million dollars.</desc></svg></div><div class="chart-meta"><span><svg class="icon" aria-hidden="true"><use href="#i-link"/></svg><span id="chart-source">Source: quarterly_revenue_by_segment</span></span><span><svg class="icon" aria-hidden="true"><use href="#i-clock"/></svg><span id="chart-refreshed">Sep 29, 2026, 09:41</span></span></div><p class="chart-result" id="chart-result"></p></div><aside class="takeaways" aria-label="Static slide commentary"><p class="takeaway-label">THE TAKEAWAY</p><div class="takeaway"><div class="takeaway-value" id="takeaway-one-value">+27%</div><p class="takeaway-description" id="takeaway-one-label">Total revenue growth</p></div><div class="takeaway"><div class="takeaway-value" id="takeaway-two-value">75%</div><p class="takeaway-description" id="takeaway-two-label">Of growth came from Enterprise</p></div><div class="action" id="slide-action">Prioritize capacity in the highest-growth segment.</div></aside></div><footer class="slide-footer"><span>NORTHSTAR / ILLUSTRATIVE DATA</span><span id="slide-number">03</span></footer></article></div><div class="notes"><button class="inert" aria-disabled="true">Click to add notes</button></div></section>
+        <aside class="pane" aria-label="Databricks add-in"><header class="pane-header"><span class="pane-icon"><svg class="icon" aria-hidden="true"><use href="#i-database"/></svg></span><div><div class="pane-name">Databricks</div><p class="pane-subtitle">POWERPOINT</p></div></header><div class="pane-body"><button class="workspace-picker" id="workspace-picker" aria-haspopup="dialog"><span><span class="workspace-name"><span class="status-dot"></span>Northstar · Production</span><span class="signed-in" id="signed-in">Signed in as Alex Chen</span></span><svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg></button><button class="refresh-button" id="refresh-all"><svg class="icon" aria-hidden="true"><use href="#i-refresh"/></svg><span id="refresh-button-label">Refresh all charts</span></button><p class="linked-count">12 linked charts in this deck</p><div class="deck-status" id="deck-status"><svg class="icon" aria-hidden="true"><use href="#i-clock"/></svg><div id="deck-status-content"><strong>Ready to refresh 12 charts</strong><p>Last successful refresh: Sep 29, 2026, 09:41</p></div></div><div class="pane-tabs" role="tablist" aria-label="Chart details"><button class="pane-tab" id="tab-selected" role="tab" aria-selected="true" aria-controls="panel-selected" tabindex="0">Selected chart</button><button class="pane-tab" id="tab-deck" role="tab" aria-selected="false" aria-controls="panel-deck" tabindex="-1">This deck</button></div><section id="panel-selected" role="tabpanel" aria-labelledby="tab-selected"><h2 class="selection-title" id="selection-title">Revenue by segment</h2><p class="selection-meta" id="selection-meta">Slide 3 · Native PowerPoint chart concept</p><h3 class="section-label">Saved query</h3><button class="query-card" id="query-card" aria-haspopup="dialog"><svg class="icon" aria-hidden="true"><use href="#i-database"/></svg><span><span class="query-name" id="query-name">quarterly_revenue_by_segment</span><span class="query-folder" id="query-folder" style="display:block">Finance / Board reporting</span></span><svg class="icon open" aria-hidden="true"><use href="#i-open"/></svg></button><h3 class="mapping-label">COLUMN MAPPING</h3><div id="mapping-fields"></div><div id="mapping-warning" hidden></div><div class="selected-status" id="selected-status"></div><button class="view-data" id="view-data" aria-haspopup="dialog"><svg class="icon" aria-hidden="true"><use href="#i-table"/></svg>View data</button><div class="formatting"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg><div><strong>Formatting preserved</strong><p>Chart data changes. Your template stays.</p></div></div></section><section id="panel-deck" role="tabpanel" aria-labelledby="tab-deck" hidden><p class="deck-hint">Select a chart to inspect its slide, source, and refresh status.</p><div class="deck-list" id="deck-list"></div></section><p class="permission-note"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg><span>Refresh uses your Databricks permissions.<br>Viewers see the last refreshed version.</span></p></div><footer class="pane-bottom"><button class="inert" aria-disabled="true">Manage links</button><button class="inert" aria-disabled="true">Help</button></footer></aside>
+      </div>
+      <footer class="product-statusbar"><span id="statusbar-slide">Slide 3 of 8</span><span><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Desktop PowerPoint concept</span><span class="statusbar-right">Northstar corporate theme</span></footer>
+    </section>
+    <footer class="page-footer"><div><p class="attribution">Concept by Iso Deesomlert. Not a Databricks or Microsoft product.</p><p>Simulated sign-in, permissions, query results, and refreshes. No live connection.</p></div><p class="footnote">This demo focuses on P0: chart linking, refresh, and recovery.<br>Slide commentary is static. Automatic updates to text and tables are planned for P1.</p></footer>
+  </main>
+  <p class="sr-only" id="inactive-control-note">Not part of this demo. Select linked charts from This deck.</p>
+  <div class="sr-only" id="live-status" role="status" aria-live="polite" aria-atomic="true"></div>
+  <div class="tooltip" id="inactive-tooltip" role="tooltip" hidden>Not part of this demo</div>
+  <dialog id="query-dialog" aria-labelledby="query-dialog-title" aria-describedby="query-dialog-description"><header class="dialog-header"><div><h2 id="query-dialog-title">Link chart to a saved query</h2><p class="dialog-description" id="query-dialog-description">Choose a permitted query and confirm its column mapping.</p></div><button class="close-dialog" data-close-dialog aria-label="Close query configuration"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></header><div class="dialog-content"><label class="dialog-label" for="query-select">Saved queries available to Alex Chen</label><select class="dialog-select" id="query-select"></select><p class="query-note" id="query-preview-note"></p><div id="query-preview-table"></div><div class="dialog-mappings"><h3 class="mapping-label">MAP QUERY COLUMNS TO THE CHART</h3><div id="query-dialog-mappings"></div></div><div id="query-dialog-message" hidden></div></div><footer class="dialog-actions"><button class="button-secondary" data-close-dialog>Cancel</button><button class="button-primary" id="save-link">Save chart link</button></footer></dialog>
+  <dialog id="data-dialog" aria-labelledby="data-dialog-title" aria-describedby="data-dialog-description"><header class="dialog-header"><div><h2 id="data-dialog-title">Chart data</h2><p class="dialog-description" id="data-dialog-description">The last successfully refreshed values currently shown on the slide.</p></div><button class="close-dialog" data-close-dialog aria-label="Close chart data"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></header><div class="dialog-content"><p class="query-note" id="data-note"></p><div id="data-table"></div></div><footer class="dialog-actions"><button class="button-primary" data-close-dialog>Done</button></footer></dialog>
+  <dialog id="signin-dialog" aria-labelledby="signin-dialog-title" aria-describedby="signin-dialog-description"><header class="dialog-header"><div><h2 id="signin-dialog-title">Connect to Databricks</h2><p class="dialog-description" id="signin-dialog-description">A simulated connection for this product concept.</p></div><button class="close-dialog" data-close-dialog aria-label="Close connection settings"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></header><div class="dialog-content"><div class="signin-card"><span class="avatar">AC</span><div><strong>Alex Chen</strong><p>Management consultant<br>Northstar · Production</p></div></div><p class="query-note">In the proposed product, you would sign in with your Databricks account. Your access determines which saved queries you can use.</p><ul class="permission-list"><li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Read access to the illustrative reporting queries in this deck.</li><li><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg>No private queries are included in the picker.</li></ul><p class="simulation">This demo collects no credentials and does not connect to Databricks.</p></div><footer class="dialog-actions"><button class="button-secondary" id="sign-out">Sign out of demo</button><button class="button-primary" id="sign-in">Sign in as Alex Chen</button></footer></dialog>
+  <script>
+// Fictional, deterministic sample results. Money columns are expressed in $ million.
+const DEMO_SLIDES = [
+  { number: 1, shortTitle: 'Executive business review' },
+  { number: 2, shortTitle: 'Performance at a glance' },
+  { number: 3, shortTitle: 'Enterprise drives growth' },
+  { number: 4, shortTitle: 'Retention remains resilient' },
+  { number: 5, shortTitle: 'Regional growth' },
+  { number: 6, shortTitle: 'Customer momentum' },
+  { number: 7, shortTitle: 'Operations at scale' },
+  { number: 8, shortTitle: 'Priorities for next quarter' }
+];
+
+const DEMO_CHARTS = [
+  {
+    id: 'bookings-segment', title: 'Bookings by segment', slide: 2,
+    query: 'quarterly_bookings_by_segment', folder: 'Sales / Board reporting',
+    unit: '$ million', valueKey: 'bookings_amount', initialValueKey: 'bookings_amount',
+    rows: [
+      { quarter: 'Q3 2025', segment: 'Enterprise', bookings_amount: 40 },
+      { quarter: 'Q3 2025', segment: 'SMB', bookings_amount: 20 },
+      { quarter: 'Q4 2025', segment: 'Enterprise', bookings_amount: 42 },
+      { quarter: 'Q4 2025', segment: 'SMB', bookings_amount: 22 },
+      { quarter: 'Q1 2026', segment: 'Enterprise', bookings_amount: 46 },
+      { quarter: 'Q1 2026', segment: 'SMB', bookings_amount: 24 },
+      { quarter: 'Q2 2026', segment: 'Enterprise', bookings_amount: 50 },
+      { quarter: 'Q2 2026', segment: 'SMB', bookings_amount: 25 }
+    ],
+    headline: 'Bookings grew 25% as both segments expanded',
+    subtitle: 'Quarterly bookings increased from $60m to $75m over the last four quarters.',
+    takeaways: [{ value: '$75m', label: 'Q2 2026 bookings' }, { value: '+25%', label: 'Bookings growth over four quarters' }],
+    action: 'Build sales capacity to sustain momentum in both segments.'
+  },
+  {
+    id: 'subscription-revenue', title: 'Subscription revenue by segment', slide: 2,
+    query: 'quarterly_subscription_revenue_by_segment', folder: 'Finance / Board reporting',
+    unit: '$ million', valueKey: 'subscription_revenue_amount', initialValueKey: 'subscription_revenue_amount',
+    rows: [
+      { quarter: 'Q3 2025', segment: 'Enterprise', subscription_revenue_amount: 30 },
+      { quarter: 'Q3 2025', segment: 'SMB', subscription_revenue_amount: 20 },
+      { quarter: 'Q4 2025', segment: 'Enterprise', subscription_revenue_amount: 33 },
+      { quarter: 'Q4 2025', segment: 'SMB', subscription_revenue_amount: 21 },
+      { quarter: 'Q1 2026', segment: 'Enterprise', subscription_revenue_amount: 36 },
+      { quarter: 'Q1 2026', segment: 'SMB', subscription_revenue_amount: 22 },
+      { quarter: 'Q2 2026', segment: 'Enterprise', subscription_revenue_amount: 42 },
+      { quarter: 'Q2 2026', segment: 'SMB', subscription_revenue_amount: 23 }
+    ],
+    headline: 'Subscription revenue added $15m over four quarters',
+    subtitle: 'Subscription revenue increased from $50m to $65m, led by Enterprise.',
+    takeaways: [{ value: '$65m', label: 'Q2 2026 subscription revenue' }, { value: '+30%', label: 'Subscription revenue growth' }],
+    action: 'Protect the recurring revenue base while expanding Enterprise accounts.'
+  },
+  {
+    id: 'revenue-segment', title: 'Revenue by segment', slide: 3,
+    query: 'quarterly_revenue_by_segment', folder: 'Finance / Board reporting',
+    unit: '$ million', valueKey: 'revenue_amount', initialValueKey: 'revenue_usd',
+    rows: [
+      { quarter: 'Q3 2025', segment: 'Enterprise', revenue_amount: 36 },
+      { quarter: 'Q3 2025', segment: 'SMB', revenue_amount: 24 },
+      { quarter: 'Q4 2025', segment: 'Enterprise', revenue_amount: 39 },
+      { quarter: 'Q4 2025', segment: 'SMB', revenue_amount: 25 },
+      { quarter: 'Q1 2026', segment: 'Enterprise', revenue_amount: 42 },
+      { quarter: 'Q1 2026', segment: 'SMB', revenue_amount: 27 },
+      { quarter: 'Q2 2026', segment: 'Enterprise', revenue_amount: 48 },
+      { quarter: 'Q2 2026', segment: 'SMB', revenue_amount: 28 }
+    ],
+    headline: 'Enterprise drove 75% of revenue growth',
+    subtitle: 'Revenue increased from $60m to $76m over the last four quarters.',
+    takeaways: [{ value: '+27%', label: 'Total revenue growth' }, { value: '75%', label: 'Of growth came from Enterprise' }],
+    action: 'Prioritize capacity in the highest-growth segment.'
+  },
+  {
+    id: 'retained-revenue', title: 'Retained revenue by segment', slide: 4,
+    query: 'quarterly_retained_revenue_by_segment', folder: 'Customer success / Board reporting',
+    unit: '$ million', valueKey: 'retained_revenue_amount', initialValueKey: 'retained_revenue_amount',
+    rows: [
+      { quarter: 'Q3 2025', segment: 'Enterprise', retained_revenue_amount: 30 },
+      { quarter: 'Q3 2025', segment: 'SMB', retained_revenue_amount: 18 },
+      { quarter: 'Q4 2025', segment: 'Enterprise', retained_revenue_amount: 32 },
+      { quarter: 'Q4 2025', segment: 'SMB', retained_revenue_amount: 19 },
+      { quarter: 'Q1 2026', segment: 'Enterprise', retained_revenue_amount: 35 },
+      { quarter: 'Q1 2026', segment: 'SMB', retained_revenue_amount: 20 },
+      { quarter: 'Q2 2026', segment: 'Enterprise', retained_revenue_amount: 39 },
+      { quarter: 'Q2 2026', segment: 'SMB', retained_revenue_amount: 21 }
+    ],
+    headline: 'Retained revenue grew 25% with a stronger Enterprise base',
+    subtitle: 'Revenue from retained customers rose from $48m to $60m over four quarters.',
+    takeaways: [{ value: '$60m', label: 'Q2 2026 retained revenue' }, { value: '75%', label: 'Of retained revenue growth came from Enterprise' }],
+    action: 'Invest in customer success coverage for growing Enterprise accounts.'
+  },
+  {
+    id: 'renewed-contracts', title: 'Renewed contracts by segment', slide: 4,
+    query: 'quarterly_renewed_contracts_by_segment', folder: 'Customer success / Board reporting',
+    unit: 'contracts', valueKey: 'renewal_count', initialValueKey: 'renewal_count',
+    rows: [
+      { quarter: 'Q3 2025', segment: 'Enterprise', renewal_count: 90 },
+      { quarter: 'Q3 2025', segment: 'SMB', renewal_count: 110 },
+      { quarter: 'Q4 2025', segment: 'Enterprise', renewal_count: 95 },
+      { quarter: 'Q4 2025', segment: 'SMB', renewal_count: 115 },
+      { quarter: 'Q1 2026', segment: 'Enterprise', renewal_count: 100 },
+      { quarter: 'Q1 2026', segment: 'SMB', renewal_count: 120 },
+      { quarter: 'Q2 2026', segment: 'Enterprise', renewal_count: 108 },
+      { quarter: 'Q2 2026', segment: 'SMB', renewal_count: 132 }
+    ],
+    headline: 'Renewal volume increased 20% across both segments',
+    subtitle: 'Completed renewals rose from 200 to 240 contracts over four quarters.',
+    takeaways: [{ value: '+20%', label: 'Growth in completed renewals' }, { value: '55%', label: 'Of Q2 renewals came from SMB' }],
+    action: 'Scale renewal support as contract volume grows.'
+  },
+  {
+    id: 'north-america-revenue', title: 'North America revenue by segment', slide: 5,
+    query: 'quarterly_north_america_revenue_by_segment', folder: 'Finance / Regional reporting',
+    unit: '$ million', valueKey: 'revenue_amount', initialValueKey: 'revenue_amount',
+    rows: [
+      { quarter: 'Q3 2025', segment: 'Enterprise', revenue_amount: 24 },
+      { quarter: 'Q3 2025', segment: 'SMB', revenue_amount: 16 },
+      { quarter: 'Q4 2025', segment: 'Enterprise', revenue_amount: 26 },
+      { quarter: 'Q4 2025', segment: 'SMB', revenue_amount: 17 },
+      { quarter: 'Q1 2026', segment: 'Enterprise', revenue_amount: 28 },
+      { quarter: 'Q1 2026', segment: 'SMB', revenue_amount: 18 },
+      { quarter: 'Q2 2026', segment: 'Enterprise', revenue_amount: 32 },
+      { quarter: 'Q2 2026', segment: 'SMB', revenue_amount: 19 }
+    ],
+    headline: 'North America added $11m in quarterly revenue',
+    subtitle: 'Regional revenue rose from $40m to $51m over four quarters.',
+    takeaways: [{ value: '$51m', label: 'Q2 2026 North America revenue' }, { value: '+27.5%', label: 'Regional revenue growth' }],
+    action: 'Concentrate regional expansion on the Enterprise pipeline.'
+  },
+  {
+    id: 'international-revenue', title: 'International revenue by segment', slide: 5,
+    query: 'quarterly_international_revenue_by_segment', folder: 'Finance / Regional reporting',
+    unit: '$ million', valueKey: 'revenue_amount', initialValueKey: 'revenue_amount',
+    rows: [
+      { quarter: 'Q3 2025', segment: 'Enterprise', revenue_amount: 12 },
+      { quarter: 'Q3 2025', segment: 'SMB', revenue_amount: 8 },
+      { quarter: 'Q4 2025', segment: 'Enterprise', revenue_amount: 13 },
+      { quarter: 'Q4 2025', segment: 'SMB', revenue_amount: 8 },
+      { quarter: 'Q1 2026', segment: 'Enterprise', revenue_amount: 14 },
+      { quarter: 'Q1 2026', segment: 'SMB', revenue_amount: 9 },
+      { quarter: 'Q2 2026', segment: 'Enterprise', revenue_amount: 16 },
+      { quarter: 'Q2 2026', segment: 'SMB', revenue_amount: 9 }
+    ],
+    headline: 'International revenue grew 25% over four quarters',
+    subtitle: 'International revenue increased from $20m to $25m, with $4m of growth from Enterprise.',
+    takeaways: [{ value: '$25m', label: 'Q2 2026 international revenue' }, { value: '80%', label: 'Of international growth came from Enterprise' }],
+    action: 'Prioritize Enterprise account expansion in international markets.'
+  },
+  {
+    id: 'active-customers', title: 'Active customers by segment', slide: 6,
+    query: 'quarterly_active_customers_by_segment', folder: 'Customer success / Board reporting',
+    unit: 'customers', valueKey: 'customer_count', initialValueKey: 'customer_count',
+    rows: [
+      { quarter: 'Q3 2025', segment: 'Enterprise', customer_count: 120 },
+      { quarter: 'Q3 2025', segment: 'SMB', customer_count: 300 },
+      { quarter: 'Q4 2025', segment: 'Enterprise', customer_count: 130 },
+      { quarter: 'Q4 2025', segment: 'SMB', customer_count: 315 },
+      { quarter: 'Q1 2026', segment: 'Enterprise', customer_count: 140 },
+      { quarter: 'Q1 2026', segment: 'SMB', customer_count: 330 },
+      { quarter: 'Q2 2026', segment: 'Enterprise', customer_count: 150 },
+      { quarter: 'Q2 2026', segment: 'SMB', customer_count: 350 }
+    ],
+    headline: 'The active customer base reached 500 accounts',
+    subtitle: 'Active customers increased from 420 to 500 over the last four quarters.',
+    takeaways: [{ value: '500', label: 'Q2 2026 active customers' }, { value: '+80', label: 'Additional active customers over four quarters' }],
+    action: 'Expand support capacity as the customer base grows.'
+  },
+  {
+    id: 'new-customers', title: 'New customers by segment', slide: 6,
+    query: 'quarterly_new_customers_by_segment', folder: 'Sales / Board reporting',
+    unit: 'customers', valueKey: 'new_customer_count', initialValueKey: 'new_customer_count',
+    rows: [
+      { quarter: 'Q3 2025', segment: 'Enterprise', new_customer_count: 10 },
+      { quarter: 'Q3 2025', segment: 'SMB', new_customer_count: 20 },
+      { quarter: 'Q4 2025', segment: 'Enterprise', new_customer_count: 12 },
+      { quarter: 'Q4 2025', segment: 'SMB', new_customer_count: 23 },
+      { quarter: 'Q1 2026', segment: 'Enterprise', new_customer_count: 14 },
+      { quarter: 'Q1 2026', segment: 'SMB', new_customer_count: 26 },
+      { quarter: 'Q2 2026', segment: 'Enterprise', new_customer_count: 16 },
+      { quarter: 'Q2 2026', segment: 'SMB', new_customer_count: 29 }
+    ],
+    headline: 'Quarterly customer acquisition grew 50%',
+    subtitle: 'New customer additions rose from 30 to 45 per quarter.',
+    takeaways: [{ value: '45', label: 'New customers in Q2 2026' }, { value: '+50%', label: 'Growth in quarterly additions' }],
+    action: 'Prepare onboarding capacity for the expanding new-customer pipeline.'
+  },
+  {
+    id: 'resolved-tickets', title: 'Resolved support tickets by segment', slide: 7,
+    query: 'quarterly_resolved_tickets_by_segment', folder: 'Operations / Board reporting',
+    unit: 'tickets', valueKey: 'resolved_ticket_count', initialValueKey: 'resolved_ticket_count',
+    rows: [
+      { quarter: 'Q3 2025', segment: 'Enterprise', resolved_ticket_count: 300 },
+      { quarter: 'Q3 2025', segment: 'SMB', resolved_ticket_count: 450 },
+      { quarter: 'Q4 2025', segment: 'Enterprise', resolved_ticket_count: 320 },
+      { quarter: 'Q4 2025', segment: 'SMB', resolved_ticket_count: 480 },
+      { quarter: 'Q1 2026', segment: 'Enterprise', resolved_ticket_count: 350 },
+      { quarter: 'Q1 2026', segment: 'SMB', resolved_ticket_count: 500 },
+      { quarter: 'Q2 2026', segment: 'Enterprise', resolved_ticket_count: 380 },
+      { quarter: 'Q2 2026', segment: 'SMB', resolved_ticket_count: 520 }
+    ],
+    headline: 'Support resolved 20% more tickets than four quarters ago',
+    subtitle: 'Quarterly resolved tickets increased from 750 to 900.',
+    takeaways: [{ value: '900', label: 'Tickets resolved in Q2 2026' }, { value: '+20%', label: 'Growth in resolved ticket volume' }],
+    action: 'Monitor service quality while scaling support throughput.'
+  },
+  {
+    id: 'onboarding-completions', title: 'Onboarding completions by segment', slide: 7,
+    query: 'quarterly_onboarding_completions_by_segment', folder: 'Operations / Board reporting',
+    unit: 'onboardings', valueKey: 'onboarding_count', initialValueKey: 'onboarding_count',
+    rows: [
+      { quarter: 'Q3 2025', segment: 'Enterprise', onboarding_count: 8 },
+      { quarter: 'Q3 2025', segment: 'SMB', onboarding_count: 16 },
+      { quarter: 'Q4 2025', segment: 'Enterprise', onboarding_count: 10 },
+      { quarter: 'Q4 2025', segment: 'SMB', onboarding_count: 18 },
+      { quarter: 'Q1 2026', segment: 'Enterprise', onboarding_count: 12 },
+      { quarter: 'Q1 2026', segment: 'SMB', onboarding_count: 22 },
+      { quarter: 'Q2 2026', segment: 'Enterprise', onboarding_count: 15 },
+      { quarter: 'Q2 2026', segment: 'SMB', onboarding_count: 25 }
+    ],
+    headline: 'Onboarding capacity rose to 40 completions per quarter',
+    subtitle: 'Completed onboardings increased from 24 to 40 over four quarters.',
+    takeaways: [{ value: '40', label: 'Completed onboardings in Q2 2026' }, { value: '+16', label: 'More quarterly completions than Q3 2025' }],
+    action: 'Close the gap between new-customer arrivals and completed onboardings.'
+  },
+  {
+    id: 'expansion-bookings', title: 'Expansion bookings by segment', slide: 8,
+    query: 'quarterly_expansion_bookings_by_segment', folder: 'Sales / Board reporting',
+    unit: '$ million', valueKey: 'expansion_bookings_amount', initialValueKey: 'expansion_bookings_amount',
+    rows: [
+      { quarter: 'Q3 2025', segment: 'Enterprise', expansion_bookings_amount: 6 },
+      { quarter: 'Q3 2025', segment: 'SMB', expansion_bookings_amount: 4 },
+      { quarter: 'Q4 2025', segment: 'Enterprise', expansion_bookings_amount: 7 },
+      { quarter: 'Q4 2025', segment: 'SMB', expansion_bookings_amount: 4 },
+      { quarter: 'Q1 2026', segment: 'Enterprise', expansion_bookings_amount: 9 },
+      { quarter: 'Q1 2026', segment: 'SMB', expansion_bookings_amount: 5 },
+      { quarter: 'Q2 2026', segment: 'Enterprise', expansion_bookings_amount: 12 },
+      { quarter: 'Q2 2026', segment: 'SMB', expansion_bookings_amount: 6 }
+    ],
+    headline: 'Expansion bookings grew 80% as Enterprise accounts deepened',
+    subtitle: 'Quarterly expansion bookings increased from $10m to $18m over four quarters.',
+    takeaways: [{ value: '$18m', label: 'Q2 2026 expansion bookings' }, { value: '75%', label: 'Of expansion growth came from Enterprise' }],
+    action: 'Prioritize account expansion where customer adoption is strongest.'
+  }
+];
+
+  </script>
+  <script>
+(() => {
+  'use strict';
+  const $ = id => document.getElementById(id);
+  const escapeHTML = value => String(value).replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+  const icon = name => `<svg class="icon" aria-hidden="true"><use href="#i-${name}"/></svg>`;
+  const clone = value => JSON.parse(JSON.stringify(value));
+  const number = value => new Intl.NumberFormat('en-US', {maximumFractionDigits:1}).format(value);
+  const dateLabel = time => `Sep 29, 2026, ${time}`;
+  const pause = ms => new Promise(resolve => setTimeout(resolve, ms));
+  let state;
+  let queryDraft;
+  let tooltipTimer;
+  let dialogReturnFocus;
+
+  function freshState() {
+    return {
+      selected:'revenue-segment', activeTab:'selected', signedIn:true, running:false,
+      progress:0, runCount:0, lastRunTime:null,
+      charts:DEMO_CHARTS.map(fixture => ({
+        ...clone(fixture), sourceQuery:fixture.query,
+        mapping:{category:'quarter',series:'segment',values:fixture.initialValueKey},
+        snapshotMapping:{category:'quarter',series:'segment',values:fixture.initialValueKey},
+        snapshotRows:fixture.rows.map(row => ({quarter:row.quarter,segment:row.segment,[fixture.initialValueKey]:row[fixture.valueKey]})),
+        snapshotKey:fixture.initialValueKey, lastRefresh:'09:41', status:'initial',
+        error:null, sourceChecked:false, valuesUnchanged:true
+      }))
+    };
+  }
+  const selected = () => state.charts.find(chart => chart.id === state.selected);
+  const mappingValid = (chart, mapping = chart.mapping) =>
+    ['quarter','segment'].includes(mapping.category) && ['quarter','segment'].includes(mapping.series) &&
+    mapping.category !== mapping.series && mapping.values === chart.valueKey;
+  const missingValue = chart => chart.mapping.values !== chart.valueKey;
+  const statusIcon = chart => chart.status === 'success' ? 'check' : ['error','repaired','pending'].includes(chart.status) ? 'warning' : 'clock';
+  function statusText(chart) {
+    if (chart.status === 'success') return chart.valuesUnchanged ? 'Updated · values unchanged' : 'Updated · chart data refreshed';
+    if (chart.status === 'error') return 'Needs attention · last good data kept';
+    if (chart.status === 'repaired' || chart.status === 'pending') return 'Ready to refresh · last good data kept';
+    if (chart.status === 'refreshing') return 'Refreshing · last good data shown';
+    return 'Last refreshed version';
+  }
+  function announce(message) { $('live-status').textContent = message; }
+  function setTab(tab, focus = false) {
+    state.activeTab = tab;
+    ['selected','deck'].forEach(name => {
+      const active = name === tab;
+      $(`tab-${name}`).setAttribute('aria-selected', String(active));
+      $(`tab-${name}`).tabIndex = active ? 0 : -1;
+      $(`panel-${name}`).hidden = !active;
+    });
+    if (focus) $(`tab-${tab}`).focus();
+  }
+
+  function initializeThumbnails() {
+    $('thumbnails').innerHTML = DEMO_SLIDES.map(slide => `<button class="thumbnail inert" aria-disabled="true" data-slide="${slide.number}" aria-label="Slide ${slide.number}: ${escapeHTML(slide.shortTitle)}"><span class="thumb-number">${slide.number}</span><span class="thumb-paper"><span class="thumb-brand" style="display:block">NORTHSTAR</span><span class="thumb-title" style="display:block">${escapeHTML(slide.shortTitle)}</span><span class="thumb-bars"><i style="height:12px"></i><i style="height:19px"></i><i style="height:15px"></i><i style="height:24px"></i></span></span></button>`).join('');
+    document.querySelectorAll('.inert').forEach(button => {
+      button.setAttribute('aria-describedby','inactive-control-note');
+    });
+  }
+
+  function chartGroups(chart) {
+    const mapping = chart.snapshotMapping;
+    const categories = [...new Set(chart.snapshotRows.map(row => row[mapping.category]))];
+    const series = [...new Set(chart.snapshotRows.map(row => row[mapping.series]))];
+    return {
+      categories, series,
+      values:categories.map(category => series.map(serie => chart.snapshotRows
+        .filter(row => row[mapping.category] === category && row[mapping.series] === serie)
+        .reduce((sum,row) => sum + row[chart.snapshotKey],0)))
+    };
+  }
+  function niceAxis(max) {
+    const rough = max / 4;
+    const scale = Math.pow(10, Math.floor(Math.log10(rough || 1)));
+    const factor = rough / scale;
+    const step = [1,2,2.5,5,10].find(item => item >= factor) * scale;
+    return {step, top:step * Math.ceil(max / step)};
+  }
+  function renderChart(chart) {
+    const {categories,series,values} = chartGroups(chart);
+    const compact = window.innerWidth <= 800;
+    const axisFont = compact ? 24 : 11;
+    const valueFont = compact ? 25 : 13;
+    const totalFont = compact ? 26 : 14;
+    $('chart-svg').setAttribute('viewBox',compact ? '0 0 560 310' : '0 0 560 280');
+    const totals = values.map(row => row.reduce((sum,value) => sum + value,0));
+    const {step,top} = niceAxis(Math.max(...totals));
+    const plot = {left:42,right:548,top:29,bottom:235};
+    const plotHeight = plot.bottom - plot.top;
+    const groupWidth = (plot.right - plot.left) / categories.length;
+    const barWidth = Math.min(65, groupWidth * .55);
+    const colors = ['#1b3d52','#70bbb3','#688aa0','#b9cbd6'];
+    const chartDescription = categories.map((category,index) => `${category}: ${series.map((serie,s) => `${serie} ${number(values[index][s])}`).join(', ')}; total ${number(totals[index])}`).join('. ');
+    let svg = `<title id="chart-svg-title">${escapeHTML(chart.title)}</title><desc id="chart-svg-description">Stacked column chart in ${escapeHTML(chart.unit)}. ${escapeHTML(chartDescription)}. The View data button provides these values as a table.</desc>`;
+    for (let tick = 0; tick <= top + step / 2; tick += step) {
+      const y = plot.bottom - tick / top * plotHeight;
+      svg += `<line x1="${plot.left}" x2="${plot.right}" y1="${y}" y2="${y}" stroke="#e2eaf0" stroke-width="1"/><text x="${plot.left - 13}" y="${y+4}" font-size="${axisFont}" fill="#8799a6" text-anchor="end">${number(tick)}</text>`;
+    }
+    values.forEach((row,index) => {
+      const x = plot.left + groupWidth * index + (groupWidth - barWidth) / 2;
+      let accumulated = 0;
+      row.forEach((value,serieIndex) => {
+        const height = value / top * plotHeight;
+        const y = plot.bottom - (accumulated + value) / top * plotHeight;
+        svg += `<rect x="${x}" y="${y}" width="${barWidth}" height="${height}" fill="${colors[serieIndex % colors.length]}"/>`;
+        if (height >= 18) svg += `<text x="${x + barWidth/2}" y="${y + height/2 + valueFont/3}" text-anchor="middle" font-size="${valueFont}" font-weight="650" fill="${serieIndex === 0 ? '#fff' : '#1b3d52'}">${number(value)}</text>`;
+        accumulated += value;
+      });
+      const totalLabel = chart.unit === '$ million' ? `$${number(totals[index])}m` : number(totals[index]);
+      const totalY = plot.bottom - totals[index]/top * plotHeight - 10;
+      svg += `<text x="${x+barWidth/2}" y="${totalY}" text-anchor="middle" fill="#1b3d52" font-size="${totalFont}" font-weight="680">${totalLabel}</text><text x="${x+barWidth/2}" y="${plot.bottom+(compact?32:23)}" text-anchor="middle" fill="#748894" font-size="${compact?24:11}">${compact && /^Q[1-4] /.test(categories[index]) ? `<tspan x="${x+barWidth/2}">${escapeHTML(categories[index].split(' ')[0])}</tspan><tspan x="${x+barWidth/2}" dy="27">${escapeHTML(categories[index].split(' ')[1])}</tspan>` : escapeHTML(categories[index])}</text>`;
+    });
+    $('chart-svg').innerHTML = svg;
+    document.querySelector('.legend').innerHTML = series.map((serie,index) => `<span class="legend-item"><i style="background:${colors[index % colors.length]}"></i>${escapeHTML(serie)}</span>`).join('');
+  }
+
+  function selectOptions(values,current,labels = {}) {
+    return [...new Set([current,...values])].map(value => `<option value="${escapeHTML(value)}" ${value===current?'selected':''}>${escapeHTML(labels[value] || value)}</option>`).join('');
+  }
+  function mappingMarkup(chart,mapping,prefix,showMissing) {
+    const fields = [
+      {key:'category',label:'Category',options:['quarter','segment']},
+      {key:'series',label:'Series',options:['segment','quarter']},
+      {key:'values',label:'Values',options:[chart.valueKey]}
+    ];
+    return fields.map(field => {
+      const invalid = field.key === 'values' && mapping.values !== chart.valueKey && showMissing;
+      const labels = invalid ? {[mapping.values]:`${mapping.values} — not found`} : {};
+      return `<div class="mapping-row ${invalid?'invalid':''}"><label for="${prefix}-${field.key}">${field.label}</label><div class="mapping-select"><select id="${prefix}-${field.key}" data-mapping-field="${field.key}" ${state.running||!state.signedIn?'disabled':''} ${invalid?'aria-invalid="true" aria-describedby="mapping-error-text"':''}>${selectOptions(field.options,mapping[field.key],labels)}</select></div></div>`;
+    }).join('');
+  }
+
+  function renderSelected() {
+    const chart = selected();
+    $('slide-indicator').textContent = `Slide ${chart.slide}`;
+    $('selected-slide').setAttribute('aria-label',`Slide ${chart.slide}: ${chart.title}`);
+    $('slide-headline').textContent = chart.headline;
+    $('slide-subtitle').textContent = chart.subtitle;
+    $('chart-title').textContent = chart.title;
+    $('chart-unit').textContent = chart.unit;
+    $('chart-source').textContent = `Source: ${chart.sourceQuery}`;
+    $('chart-refreshed').textContent = `Refreshed ${dateLabel(chart.lastRefresh)}`;
+    $('chart-result').className = `chart-result ${chart.status}`;
+    $('chart-result').innerHTML = `${icon(statusIcon(chart))}${escapeHTML(statusText(chart))}`;
+    ['one','two'].forEach((name,index) => {
+      $(`takeaway-${name}-value`).textContent = chart.takeaways[index].value;
+      $(`takeaway-${name}-label`).textContent = chart.takeaways[index].label;
+    });
+    $('slide-action').textContent = chart.action;
+    $('slide-number').textContent = String(chart.slide).padStart(2,'0');
+    $('statusbar-slide').textContent = `Slide ${chart.slide} of 8`;
+    document.querySelectorAll('.thumbnail').forEach(button => button.classList.toggle('selected',Number(button.dataset.slide)===chart.slide));
+    $('selection-title').textContent = chart.title;
+    $('selection-meta').textContent = `Slide ${chart.slide} · Native PowerPoint chart concept`;
+    $('query-name').textContent = chart.sourceQuery;
+    $('query-folder').textContent = chart.folder;
+    $('query-card').setAttribute('aria-label',`Configure saved query ${chart.sourceQuery}`);
+    $('query-card').disabled = state.running || !state.signedIn;
+    const showMissing = chart.sourceChecked && missingValue(chart);
+    $('mapping-fields').innerHTML = mappingMarkup(chart,chart.mapping,'mapping',showMissing);
+    $('mapping-warning').hidden = !showMissing;
+    $('mapping-warning').innerHTML = showMissing ? `<p class="missing-note" id="mapping-error-text">${icon('warning')}<span>Mapped column ${escapeHTML(chart.mapping.values)} not found. Last good data is still shown.</span></p><button class="suggestion" id="use-suggestion" ${state.running||!state.signedIn?'disabled':''}>Use ${escapeHTML(chart.valueKey)}?</button>` : '';
+    $('selected-status').className = `selected-status ${chart.status}`;
+    $('selected-status').innerHTML = `${icon(statusIcon(chart))}<span>${escapeHTML(statusText(chart))}<br>Last successful refresh: ${escapeHTML(dateLabel(chart.lastRefresh))}</span>`;
+    renderChart(chart);
+  }
+
+  function renderDeck() {
+    const focused = document.activeElement?.dataset?.selectChart;
+    const scroll = $('deck-list').scrollTop;
+    $('deck-list').innerHTML = state.charts.map(chart => `<button class="deck-chart ${chart.status} ${chart.id===state.selected?'chosen':''}" data-select-chart="${chart.id}" aria-pressed="${chart.id===state.selected}" aria-label="${escapeHTML(`${chart.title}, slide ${chart.slide}, ${statusText(chart)}, last refreshed ${dateLabel(chart.lastRefresh)}`)}">${icon(statusIcon(chart))}<span><span class="deck-chart-title" style="display:block">${escapeHTML(chart.title)}</span><span class="deck-chart-meta" style="display:block">Slide ${chart.slide} · ${escapeHTML(dateLabel(chart.lastRefresh))}</span><span class="deck-chart-status" style="display:block">${escapeHTML(statusText(chart))}</span></span></button>`).join('');
+    $('deck-list').scrollTop = scroll;
+    if (focused) $('deck-list').querySelector(`[data-select-chart="${focused}"]`)?.focus({preventScroll:true});
+  }
+
+  function renderSummary() {
+    const successes = state.charts.filter(chart=>chart.status==='success').length;
+    const errors = state.charts.filter(chart=>chart.status==='error');
+    const pending = state.charts.filter(chart=>['repaired','pending'].includes(chart.status));
+    const status = $('deck-status');
+    const statusIconUse = status.querySelector('use');
+    status.className = 'deck-status';
+    let content;
+    if (state.running) {
+      statusIconUse.setAttribute('href','#i-refresh');
+      content = `<strong>Refreshing ${state.progress} of 12…</strong><p>Checking queries and preserving formatting.</p><div class="progress-track" aria-hidden="true"><div class="progress-bar" style="width:${state.progress/12*100}%"></div></div>`;
+    } else if (!state.signedIn) {
+      statusIconUse.setAttribute('href','#i-lock');
+      content = '<strong>Sign in to refresh this deck</strong><p>You can still view the last refreshed charts.</p>';
+    } else if (!state.lastRunTime && !pending.length && !errors.length) {
+      statusIconUse.setAttribute('href','#i-clock');
+      content = '<strong>Ready to refresh 12 charts</strong><p>Last successful refresh: Sep 29, 2026, 09:41</p>';
+    } else if (errors.length || pending.length) {
+      status.classList.add('warning');
+      statusIconUse.setAttribute('href','#i-warning');
+      const attention = errors.length ? `${errors.length} needs attention` : `${pending.length} ready to refresh`;
+      content = `<strong>${successes} of 12 updated · ${attention}</strong><p>${state.lastRunTime ? `Deck refresh: ${dateLabel(state.lastRunTime)}` : 'Mapping saved. Chart data has not refreshed.'}</p>`;
+      const target = errors[0] || pending[0];
+      content += `<button class="deck-warning-button" id="inspect-warning" data-warning-chart="${target.id}">${escapeHTML(target.title)} · ${errors.length?'Fix warning':'View repaired mapping'}</button>`;
+    } else if (successes===12) {
+      status.classList.add('success');
+      statusIconUse.setAttribute('href','#i-check');
+      content = `<strong>All 12 charts are up to date</strong><p>Updated ${dateLabel(state.lastRunTime)}<br>Values unchanged · formatting preserved</p>`;
+    } else {
+      statusIconUse.setAttribute('href','#i-clock');
+      content = '<strong>Ready to refresh 12 charts</strong><p>Saved chart links are ready.</p>';
+    }
+    $('deck-status-content').innerHTML = content;
+    $('refresh-all').disabled = state.running || !state.signedIn;
+    $('refresh-all').classList.toggle('running',state.running);
+    $('refresh-button-label').textContent = state.running ? 'Refreshing…' : state.signedIn ? 'Refresh all charts' : 'Sign in to refresh';
+    $('reset-demo').disabled = state.running;
+    $('workspace-picker').disabled = state.running;
+    $('signed-in').textContent = state.signedIn ? 'Signed in as Alex Chen' : 'Signed out · Demo connection';
+    document.querySelector('.status-dot').style.background = state.signedIn ? '#218668' : '#83949e';
+    const revenue = state.charts.find(chart=>chart.id==='revenue-segment');
+    const stage = !state.lastRunTime ? 1 : revenue.status==='error' ? 2 : ['repaired','pending'].includes(revenue.status) ? 3 : 4;
+    [1,2,3].forEach(index => {
+      $(`step-${index}`).className = `step ${index<stage?'completed':index===stage?'current':''}`;
+      $(`step-${index}`).removeAttribute('aria-current');
+      if (index===stage) $(`step-${index}`).setAttribute('aria-current','step');
+    });
+  }
+  function render() { renderSelected(); renderDeck(); renderSummary(); setTab(state.activeTab); }
+
+  function chooseChart(id,tab = state.activeTab) {
+    if (!state.charts.some(chart=>chart.id===id)) throw new Error('Unknown chart.');
+    state.selected = id;
+    state.activeTab = tab;
+    render();
+    announce(`${selected().title} selected on slide ${selected().slide}. ${statusText(selected())}.`);
+  }
+  function stageMapping(chart,newMapping) {
+    const previousStatus = chart.status;
+    chart.mapping = {...newMapping};
+    chart.sourceChecked = true;
+    chart.error = mappingValid(chart) ? null : missingValue(chart) ? `Mapped column ${chart.mapping.values} not found.` : 'Category and series must use different columns.';
+    chart.status = chart.error ? 'error' : previousStatus==='error' ? 'repaired' : 'pending';
+    render();
+    announce(chart.error || `${chart.title}: mapping saved. Ready to refresh. Data and last successful refresh time are unchanged.`);
+  }
+  function applySuggestion() {
+    if (state.running || !state.signedIn) return false;
+    const chart = selected();
+    if (!missingValue(chart)) return false;
+    stageMapping(chart,{...chart.mapping,values:chart.valueKey});
+    $('refresh-all').focus({preventScroll:true});
+    return true;
+  }
+  function normalizedValues(rows,key) { return JSON.stringify(rows.map(row=>[row.quarter,row.segment,row[key]])); }
+
+  async function refreshAll() {
+    if (state.running) return {ok:false,reason:'A refresh is already running.'};
+    if (!state.signedIn) return {ok:false,reason:'Sign in to the demo before refreshing.'};
+    state.running = true;
+    state.progress = 0;
+    state.runCount += 1;
+    const minute = 4 + state.runCount;
+    const time = `${String(10+Math.floor(minute/60)).padStart(2,'0')}:${String(minute%60).padStart(2,'0')}`;
+    state.charts.forEach(chart => chart.status='refreshing');
+    render();
+    announce('Refreshing 0 of 12 charts.');
+    for (const chart of state.charts) {
+      await pause(250);
+      chart.sourceChecked = true;
+      if (!mappingValid(chart)) {
+        chart.status = 'error';
+        chart.error = missingValue(chart) ? `Mapped column ${chart.mapping.values} not found.` : 'Category and series must use different columns.';
+      } else {
+        chart.valuesUnchanged = normalizedValues(chart.snapshotRows,chart.snapshotKey) === normalizedValues(chart.rows,chart.valueKey);
+        chart.snapshotRows = clone(chart.rows);
+        chart.snapshotKey = chart.valueKey;
+        chart.snapshotMapping = {...chart.mapping};
+        chart.lastRefresh = time;
+        chart.status = 'success';
+        chart.error = null;
+      }
+      state.progress += 1;
+      render();
+      if ([5,10].includes(state.progress)) announce(`Refreshing ${state.progress} of 12 charts.`);
+    }
+    state.running = false;
+    state.lastRunTime = time;
+    render();
+    const errors = state.charts.filter(chart=>chart.status==='error');
+    if (errors.length) {
+      announce(`${12-errors.length} of 12 charts updated at ${dateLabel(time)}. ${errors.length} needs attention. ${errors[0].title}: ${errors[0].error} Last good data and its previous refresh time were kept.`);
+    } else {
+      announce(`All 12 charts updated at ${dateLabel(time)}. Values unchanged. Formatting preserved.`);
+    }
+    return {ok:!errors.length,updated:12-errors.length,errors:errors.map(chart=>({chartId:chart.id,reason:chart.error})),time:dateLabel(time)};
+  }
+
+  function tableMarkup(rows,valueKey,caption) {
+    return `<div class="table-wrap"><table><caption>${escapeHTML(caption)}</caption><thead><tr><th scope="col">quarter</th><th scope="col">segment</th><th scope="col">${escapeHTML(valueKey)}</th></tr></thead><tbody>${rows.map(row=>`<tr><td>${escapeHTML(row.quarter)}</td><td>${escapeHTML(row.segment)}</td><td>${number(row[valueKey])}</td></tr>`).join('')}</tbody></table></div>`;
+  }
+  function openDialog(id,focusId) {
+    hideTooltip();
+    dialogReturnFocus = document.activeElement;
+    $(id).showModal();
+    if (focusId) $(focusId).focus();
+  }
+  function updateQueryDraft() {
+    const chart = selected();
+    $('query-preview-note').textContent = `${chart.folder} · Latest sample results in ${chart.unit}. These are query results; the slide keeps its last good data until you refresh.`;
+    $('query-preview-table').innerHTML = tableMarkup(chart.rows,chart.valueKey,'Latest saved-query results');
+    $('query-dialog-mappings').innerHTML = mappingMarkup(chart,queryDraft.mapping,'draft',true).replaceAll('aria-describedby="mapping-error-text"','aria-describedby="query-dialog-message"');
+    const message = $('query-dialog-message');
+    const invalid = !mappingValid(chart,queryDraft.mapping);
+    message.hidden = false;
+    message.className = 'dialog-message';
+    message.textContent = invalid ? queryDraft.mapping.values!==chart.valueKey ? `The saved mapping uses ${queryDraft.mapping.values}, which is not in the latest results. Select ${chart.valueKey} to repair it.` : 'Choose different columns for Category and Series.' : 'Saving this link updates the configuration only. Refresh the deck to apply its query results.';
+    $('save-link').disabled = invalid || state.running || !state.signedIn;
+  }
+  function openQuery() {
+    if (state.running || !state.signedIn) return;
+    const chart = selected();
+    queryDraft = {sourceQuery:chart.sourceQuery,mapping:{...chart.mapping}};
+    const queries = [chart.query,`${chart.query}_review_copy`];
+    $('query-select').innerHTML = queries.map(query=>`<option value="${escapeHTML(query)}" ${query===chart.sourceQuery?'selected':''}>${escapeHTML(query)}${query.endsWith('_review_copy')?' (same illustrative data)':''}</option>`).join('');
+    updateQueryDraft();
+    openDialog('query-dialog','query-select');
+  }
+  function showData() {
+    const chart = selected();
+    $('data-dialog-title').textContent = `${chart.title} · chart data`;
+    $('data-note').textContent = `${chart.unit} · Last successful refresh: ${dateLabel(chart.lastRefresh)}. ${statusText(chart)}.`;
+    $('data-table').innerHTML = tableMarkup(chart.snapshotRows,chart.snapshotKey,'Values currently shown on the slide');
+    openDialog('data-dialog');
+  }
+
+  function showTooltip(target) {
+    if (!target || !target.isConnected) return;
+    clearTimeout(tooltipTimer);
+    const tooltip = $('inactive-tooltip');
+    tooltip.textContent = target.classList.contains('thumbnail') ? 'Not part of this demo. Select charts from “This deck”.' : 'Not part of this demo';
+    tooltip.hidden = false;
+    const rect = target.getBoundingClientRect();
+    const tipRect = tooltip.getBoundingClientRect();
+    tooltip.style.left = `${Math.max(8,Math.min(rect.left + rect.width/2 - tipRect.width/2,window.innerWidth-tipRect.width-8))}px`;
+    tooltip.style.top = `${rect.bottom+tipRect.height+16<window.innerHeight ? rect.bottom+8 : Math.max(8,rect.top-tipRect.height-8)}px`;
+  }
+  function hideTooltip() { clearTimeout(tooltipTimer); $('inactive-tooltip').hidden=true; }
+
+  $('refresh-all').addEventListener('click',refreshAll);
+  $('reset-demo').addEventListener('click',()=>{
+    if (state.running) return;
+    document.querySelectorAll('dialog[open]').forEach(dialog=>dialog.close());
+    state = freshState();
+    $('deck-list').scrollTop=0;
+    render();
+    announce('Demo reset. Revenue by segment selected on slide 3. Ready to refresh 12 charts.');
+  });
+  $('tab-selected').addEventListener('click',()=>setTab('selected'));
+  $('tab-deck').addEventListener('click',()=>setTab('deck'));
+  document.querySelector('.pane-tabs').addEventListener('keydown',event=>{
+    if (!['ArrowLeft','ArrowRight','Home','End'].includes(event.key)) return;
+    event.preventDefault();
+    setTab(event.key==='Home'?'selected':event.key==='End'?'deck':state.activeTab==='selected'?'deck':'selected',true);
+  });
+  $('deck-list').addEventListener('click',event=>{
+    const button = event.target.closest('[data-select-chart]');
+    if (button) chooseChart(button.dataset.selectChart);
+  });
+  $('deck-status').addEventListener('click',event=>{
+    const button = event.target.closest('[data-warning-chart]');
+    if (button) {
+      chooseChart(button.dataset.warningChart,'selected');
+      ($('use-suggestion') || $('mapping-values')).focus({preventScroll:true});
+    }
+  });
+  $('mapping-warning').addEventListener('click',event=>{ if(event.target.closest('#use-suggestion')) applySuggestion(); });
+  $('mapping-fields').addEventListener('change',event=>{
+    if (state.running || !state.signedIn) return;
+    const key = event.target.dataset.mappingField;
+    if (!key) return;
+    const chart = selected();
+    const mapping = {...chart.mapping,[key]:event.target.value};
+    if (key==='category' && mapping.category===mapping.series) mapping.series = mapping.category==='quarter'?'segment':'quarter';
+    if (key==='series' && mapping.series===mapping.category) mapping.category = mapping.series==='quarter'?'segment':'quarter';
+    stageMapping(chart,mapping);
+    $(`mapping-${key}`).focus({preventScroll:true});
+  });
+  $('query-card').addEventListener('click',openQuery);
+  $('view-data').addEventListener('click',showData);
+  $('query-select').addEventListener('change',event=>{ queryDraft.sourceQuery = event.target.value; });
+  $('query-dialog-mappings').addEventListener('change',event=>{
+    const key = event.target.dataset.mappingField;
+    if (!key) return;
+    queryDraft.mapping[key] = event.target.value;
+    if (key==='category' && queryDraft.mapping.category===queryDraft.mapping.series) queryDraft.mapping.series=queryDraft.mapping.category==='quarter'?'segment':'quarter';
+    if (key==='series' && queryDraft.mapping.series===queryDraft.mapping.category) queryDraft.mapping.category=queryDraft.mapping.series==='quarter'?'segment':'quarter';
+    updateQueryDraft();
+    $(`draft-${key}`).focus();
+  });
+  $('save-link').addEventListener('click',()=>{
+    const chart = selected();
+    if (state.running || !state.signedIn || !mappingValid(chart,queryDraft.mapping)) return;
+    chart.sourceQuery = queryDraft.sourceQuery;
+    stageMapping(chart,queryDraft.mapping);
+    $('query-dialog').close();
+  });
+  $('workspace-picker').addEventListener('click',()=>{
+    if (state.running) return;
+    $('sign-out').disabled=!state.signedIn;
+    $('sign-in').textContent=state.signedIn?'Reconnect as Alex Chen':'Sign in as Alex Chen';
+    openDialog('signin-dialog','sign-in');
+  });
+  $('sign-out').addEventListener('click',()=>{
+    if (state.running) return;
+    state.signedIn=false;
+    render();
+    $('signin-dialog').close();
+    announce('Signed out of the demo. Viewers see the last refreshed version. Sign in to refresh.');
+  });
+  $('sign-in').addEventListener('click',()=>{
+    if (state.running) return;
+    state.signedIn=true;
+    render();
+    $('signin-dialog').close();
+    announce('Signed in as Alex Chen to Northstar Production. Illustrative reporting queries are available.');
+  });
+  document.querySelectorAll('dialog').forEach(dialog=>{
+    dialog.addEventListener('keydown',event=>{
+      if (event.key !== 'Tab') return;
+      const controls = [...dialog.querySelectorAll('button:not(:disabled),select:not(:disabled),input:not(:disabled),a[href],[tabindex="0"]')].filter(control=>control.getClientRects().length);
+      const first = controls[0], last = controls[controls.length-1];
+      if (!first) { event.preventDefault(); return; }
+      if (event.shiftKey && (document.activeElement === first || !dialog.contains(document.activeElement))) { event.preventDefault(); last.focus(); }
+      else if (!event.shiftKey && (document.activeElement === last || !dialog.contains(document.activeElement))) { event.preventDefault(); first.focus(); }
+    });
+    dialog.addEventListener('click',event=>{
+      if (event.target.closest('[data-close-dialog]')) dialog.close();
+      else if (event.target===dialog) {
+        const rect=dialog.getBoundingClientRect();
+        if(event.clientX<rect.left||event.clientX>rect.right||event.clientY<rect.top||event.clientY>rect.bottom) dialog.close();
+      }
+    });
+    dialog.addEventListener('close',()=>{ if(dialogReturnFocus?.isConnected) dialogReturnFocus.focus({preventScroll:true}); });
+  });
+  document.addEventListener('pointerover',event=>{ const target=event.target.closest('.inert'); if(target)showTooltip(target); });
+  document.addEventListener('pointerout',event=>{ const target=event.target.closest('.inert'); if(target&&!target.contains(event.relatedTarget))hideTooltip(); });
+  document.addEventListener('focusin',event=>{ const target=event.target.closest('.inert'); if(target)showTooltip(target);else hideTooltip(); });
+  document.addEventListener('focusout',event=>{ if(event.target.closest('.inert'))hideTooltip(); });
+  document.addEventListener('click',event=>{
+    const target=event.target.closest('.inert');
+    if(target){event.preventDefault();showTooltip(target);tooltipTimer=setTimeout(hideTooltip,2200);}
+  });
+  document.addEventListener('keydown',event=>{ if(event.key==='Escape')hideTooltip(); });
+  window.addEventListener('resize',()=>{ hideTooltip(); renderChart(selected()); });
+  window.addEventListener('scroll',hideTooltip,true);
+
+  // Optional browser tool interface. It uses the same actions and state as the UI.
+  // Unsupported browsers require no dependency and simply ignore registration.
+  function registerBrowserTools() {
+    const context = document.modelContext;
+    if (!context?.registerTool) return;
+    const lifecycle = new AbortController();
+    const readState = () => ({selectedChart:state.selected,signedIn:state.signedIn,running:state.running,charts:state.charts.map(chart=>({id:chart.id,title:chart.title,slide:chart.slide,status:chart.status,mapping:{...chart.mapping},lastRefresh:dateLabel(chart.lastRefresh)}))});
+    const emptySchema = {type:'object',properties:{},additionalProperties:false};
+    const definitions = [
+      {name:'read_deck_refresh_status',title:'Read deck refresh status',description:'Read the selected chart and all 12 simulated chart refresh states.',inputSchema:emptySchema,annotations:{readOnlyHint:true,untrustedContentHint:false},execute:readState},
+      {name:'select_linked_chart',title:'Select a linked chart',description:'Select a chart and show its slide and mapping.',inputSchema:{type:'object',properties:{chartId:{type:'string'}},required:['chartId'],additionalProperties:false},annotations:{readOnlyHint:false,untrustedContentHint:false},execute:input=>{if(!input||typeof input.chartId!=='string'||Object.keys(input).some(key=>key!=='chartId'))throw new Error('Provide a valid chartId only.');chooseChart(input.chartId,'selected');return readState();}},
+      {name:'repair_selected_value_mapping',title:'Repair selected value mapping',description:'Accept the suggested numeric column for the selected chart. This stages a mapping repair; it does not refresh chart data.',inputSchema:emptySchema,annotations:{readOnlyHint:false,untrustedContentHint:false},execute:()=>({repaired:applySuggestion(),state:readState()})},
+      {name:'refresh_linked_deck',title:'Refresh linked deck',description:'Run the three-second simulated refresh for all 12 linked charts and return its completed outcome.',inputSchema:emptySchema,annotations:{readOnlyHint:false,untrustedContentHint:false},execute:refreshAll}
+    ];
+    definitions.forEach(definition=>{try{Promise.resolve(context.registerTool(definition,{signal:lifecycle.signal})).catch(()=>{});}catch{}});
+    window.addEventListener('pagehide',()=>lifecycle.abort(),{once:true});
+  }
+  state=freshState();
+  initializeThumbnails();
+  render();
+  registerBrowserTools();
+})();
+
+  </script>
+</body>
+</html>
